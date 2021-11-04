@@ -1,6 +1,4 @@
-cat <<EOF >./kustomization.yaml
 secretGenerator:
 - name: mysql-pass
   literals:
-  - password=qwerty123
-EOF
+  - password=12345
