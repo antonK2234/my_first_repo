@@ -7,6 +7,8 @@ spec:
     matchLabels:
       app: my-simple-app
   replicas: 2
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
