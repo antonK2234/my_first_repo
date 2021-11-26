@@ -34,6 +34,10 @@ spec:
       containers:
       - image: wordpress:latest
         name: wordpress
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
         env:
         - name: WORDPRESS_DB_HOST
           value: wordpress-db-one # This one is from Service
