@@ -1,0 +1,58 @@
+# jenkins-deployemt.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-master
+  namespace: jenkins
+  labels:
+    app: jenkins
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      securityContext:
+        runAsUser: 0
+        fsGroup: 1000
+      containers:
+      - name: jenkins-master
+        image: jenkins/jenkins:lts
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: JENKINS_HOME
+          value: /var/jenkins_home
+        - name: JAVA_OPTS
+          value: -Djenkins.install.runSetupWizard=false
+        - name: JAVA_OPTS
+          value: "-Xmx8192m"
+        # - name: COPY_REFERENCE_FILE_LOG
+        #   value: $JENKINS_HOME/copy_reference_file.log
+        ports:
+        - name: jenkins-port
+          containerPort: 8080
+        - name: jnlp-port
+          containerPort: 50000
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "5Gi"
+            cpu: "2000m"
+        volumeMounts:
+        - name: jenkins-home-volume
+          mountPath: "/var/jenkins_home"
+      volumes:
+      - name: jenkins-home-volume
+        persistentVolumeClaim:
+          claimName: jenkins-home-pvc 

@@ -1,0 +1,15 @@
+#jenkins-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-home-pvc 
+  namespace: jenkins
+  labels:
+    app: jenkins
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: jenkins
+  resources:
+    requests:
+      storage: 10Gi
